@@ -68,27 +68,28 @@ class Grafo:
 
             print()
     def graficar_grafo(self):
-        # 1. Obtener los datos que ya genera tu código
         vertices, matriz = self.generar_matriz_adyacencia()
     
-        # 2. Convertir tu matriz a formato NumPy y crear el grafo
-        # Usa nx.DiGraph para grafos dirigidos (con flechas)
-        A = np.array(matriz)
-        G = nx.from_numpy_array(A, create_using=nx.DiGraph)
+        # se pasa la matriz a un array de numpy para poder usarla con networkx
+        n_matriz = np.array(matriz)
+        grafo = nx.from_numpy_array(n_matriz, create_using=nx.DiGraph)
         
-        # 3. Mapear los números de los índices (0, 1, 2) a tus nombres reales de vértices
-        mapeo_nombres = {i: vertices[i] for i in range(len(vertices))}
-        G = nx.relabel_nodes(G, mapeo_nombres)
+        # cambia los numeros presentados en el grafo por los nombres de los vertices
+        cambio_nombres = {}
+        for i in range(len(vertices)):
+            cambio_nombres[i] = vertices[i]
+        grafo = nx.relabel_nodes(grafo, cambio_nombres)
         
-        # 4. Dibujar con Matplotlib
-        pos = nx.spring_layout(G)
+        # Dibujar con Matplotlib
+        pos = nx.spring_layout(grafo)
+        # plt.figure(figsize=(ancho, alto))
         plt.figure(figsize=(8, 6))
         
-        nx.draw(G, pos, with_labels=True, node_color='lightgreen', node_size=1200)
+        nx.draw(grafo, pos, with_labels=True, node_color='lightgreen', node_size=1200)
         
         # Dibujar los pesos de la matriz
-        pesos = nx.get_edge_attributes(G, 'weight')
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=pesos)
+        pesos = nx.get_edge_attributes(grafo, 'weight')
+        nx.draw_networkx_edge_labels(grafo, pos, edge_labels=pesos)
         
         plt.show()
 
