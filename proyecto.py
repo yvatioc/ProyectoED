@@ -93,10 +93,9 @@ class Grafo:
         
         plt.show()
 
-
-if __name__=="__main__":
+def carga_datos_excel(nombre_archivo):
     # Cargar los datos desde el archivo Excel
-    datos = pd.read_excel('red_isp_65_registros.xlsx')
+    datos = pd.read_excel(nombre_archivo)
 
     # Crear listas a partir del archivo Excel
     origen = datos["Origen"].to_list()
@@ -109,24 +108,84 @@ if __name__=="__main__":
     
     largo = len(origen)
     i = 0
+    # Agregar los vértices y aristas al grafo
     while i < largo:
-        print(f"Agregando arista: {origen[i]} -> {destino[i]} con latencia {latencia[i]}")
         g.agregar_vertice(origen[i])
         if destino[i] not in g.vertices:
             g.agregar_vertice(destino[i])
         g.agregar_arista(origen[i], destino[i], latencia[i])
         i += 1
+    return g
 
-#    g.agregar_vertice("A")
-#    g.agregar_vertice("B")
-#    g.agregar_vertice("C")
+def mostrar_datos(grafo):
+    grafo.mostrar_lista_adyacencia()
+    grafo.mostrar_matriz_adyacencia()
+    grafo.graficar_grafo()
 
-#    g.agregar_arista("A", "B", 10)
-#    g.agregar_arista("A", "C", 5)
-#    g.agregar_arista("B", "C", 3)
+def ingreso_de_ruta(g):
 
-    g.mostrar_lista_adyacencia()
+    # Solicitar al usuario que ingrese el nodo de origen y destino
+    print("Ingrese el nodo de origen:")
+    nodo_origen = input().strip().upper()
+    while nodo_origen not in g.vertices:
+        print("Nodo de origen no válido. Ingrese un nodo existente:")
+        nodo_origen = input().strip().upper()
+    
+    print("Ingrese el nodo de destino:")
+    nodo_destino = input().strip().upper()
+    while nodo_destino not in g.vertices:
+        print("Nodo de destino no válido. Ingrese un nodo existente:")
+        nodo_destino = input().strip().upper()
 
-    g.mostrar_matriz_adyacencia()
+    return nodo_origen, nodo_destino
 
-    g.graficar_grafo()
+def sub_grafo(g, n_o, n_d, n_g):
+    nodo_origen = n_o
+    nodo_destino = n_d
+
+    # si se encuentra un camino valido desde el nodo de origen hasta el nodo de destino, se agrega al subgrafo
+    if nodo_origen == nodo_destino:
+        n_g.agregar_vertice(nodo_origen)
+        return True
+
+    destinos = []
+    pesos = []
+
+    # conseguir los nodos destino y pesos del nodo de origen
+    if nodo_origen in g.vertices:
+        vertice = g.vertices[nodo_origen]
+        for destino, peso in vertice:
+            destinos.append(destino)
+            pesos.append(peso)
+    
+    # varible para determinar si al menos un camino desde el nodo de origen llega hasta el nodo de destino exitoso
+    al_menos_uno_sirve = False
+
+    # recorrer los destinos del nodo de origen y verificar si alguno de ellos tiene un camino exitoso hasta el nodo destino
+    for i in destinos:
+        camino_exitoso = sub_grafo(g, i, nodo_destino, n_g)
+        
+        # Si el camino desde el nodo actual hasta el nodo destino es exitoso, 
+        # entonces este nodo forma parte del subgrafo
+        if camino_exitoso:
+            al_menos_uno_sirve = True
+            
+            # agregar el camino al subgrafo
+            if nodo_origen not in n_g.vertices:
+                n_g.agregar_vertice(nodo_origen)
+            if i not in n_g.vertices:
+                n_g.agregar_vertice(i)
+                
+            n_g.agregar_arista(nodo_origen, i, pesos[destinos.index(i)])
+
+    return al_menos_uno_sirve
+
+if __name__=="__main__":
+    grafo = carga_datos_excel("archivo_prueba2.xlsx")
+    nodo_origen, nodo_destino =ingreso_de_ruta(grafo)
+    #mostrar_datos(grafo)
+    n_g = Grafo()
+    nuevo_g = sub_grafo(grafo, nodo_origen, nodo_destino,n_g)
+
+    n_g.mostrar_lista_adyacencia()
+    n_g.graficar_grafo()
