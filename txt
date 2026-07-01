@@ -1,5 +1,0 @@
-Libreria para extraer el archivo exel
-pip install pandas openpyxl
-
-Libreria para crear el grafo
-pip install networkx matplotlib
