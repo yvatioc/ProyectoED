@@ -283,9 +283,6 @@ if __name__ == "__main__":
                 # verificar si el router destino existe en la red
                 if destino not in grafo.vertices:
                     print("El router de destino no existe en el sistema. Intente de nuevo.")
-                    print("Para volver al menú principal, ingrese 1.")
-                    if destino == "1":
-                        break  # Salir del bucle while True y volver al menú principal
                     continue  # Reinicia el while True para pedir el destino otra vez
                 
                 # Si existe en la red, se busca si hay conexión directa desde el origen
@@ -299,14 +296,18 @@ if __name__ == "__main__":
                     break  # Rompe el bucle while true
                 else:
                     print(f"No existe un enlace directo desde '{origen}' hacia '{destino}'. Intente de nuevo.")
-            try:
-                lat = int(input("Nueva Latencia (ms): "))
-                costo = int(input("Nuevo Costo (CLP): "))
-                ab = int(input("Nuevo Ancho Banda (Mbps): "))
-                estado = input("Estado (Activo/Inactivo): ").strip().capitalize()
-                grafo.modificar_arista(origen, destino, lat, costo, ab, estado)
-            except ValueError:
-                print("Error: Ingresaste un valor no numérico para latencia, costo o ancho de banda.")
+                    print("Para volver al menú principal, ingrese 1.")
+                    elec = input("Ingrese su elección: ").strip()
+                    if elec == "1":
+                        break 
+                try:
+                    lat = int(input("Nueva Latencia (ms): "))
+                    costo = int(input("Nuevo Costo (CLP): "))
+                    ab = int(input("Nuevo Ancho Banda (Mbps): "))
+                    estado = input("Estado (Activo/Inactivo): ").strip().capitalize()
+                    grafo.modificar_arista(origen, destino, lat, costo, ab, estado)
+                except ValueError:
+                    print("Error: Ingresaste un valor no numérico para latencia, costo o ancho de banda.")
                 
         elif opcion == "3":
             print("\n--- ELIMINAR ENLACE ---")
@@ -321,9 +322,6 @@ if __name__ == "__main__":
                 # verificar si el router destino existe en la red
                 if destino not in grafo.vertices:
                     print("El router de destino no existe en el sistema. Intente de nuevo.")
-                    print("Para volver al menú principal, ingrese 1.")
-                    if destino == "1":
-                        break  # Salir del bucle while True y volver al menú principal
                     continue  # Reinicia el while True para pedir el destino otra vez
                 
                 # Si existe en la red, se busca si hay conexión directa desde el origen
@@ -337,6 +335,10 @@ if __name__ == "__main__":
                     break  # Rompe el bucle while true
                 else:
                     print(f"No existe un enlace directo desde '{origen}' hacia '{destino}'. Intente de nuevo.")
+                    print("Para volver al menú principal, ingrese 1.")
+                    elec = input("Ingrese su elección: ").strip()
+                    if elec == "1":
+                        break  # Salir del bucle while True y volver al menú principal
             grafo.eliminar_arista(origen, destino)
             
         elif opcion == "4":
