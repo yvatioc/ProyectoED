@@ -208,6 +208,7 @@ class Grafo:
             print("Red estable: Todos los routers están interconectados. No hay zonas aisladas.")
         else:
             print("¡Alerta! Se detectaron zonas aisladas en la red.")
+    
 
 def carga_datos_excel(nombre_archivo):
     datos = pd.read_excel(nombre_archivo)
